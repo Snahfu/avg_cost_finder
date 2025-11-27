@@ -13,7 +13,7 @@ func Calculate(qty, avg float64, order model.Transaksi) (float64, float64, bool)
 			return qty, avg, false
 		}
 		newAvg := (float64(order.Qty)*order.Price + avg*qty) / newQty
-		return newQty, utils.Round(newAvg, 4), true
+		return newQty, utils.Round(newAvg, 6), true
 	} else if order.Type == "SELL" { // Sell
 		newQty := qty - float64(order.Qty)
 		if newQty < 0 {

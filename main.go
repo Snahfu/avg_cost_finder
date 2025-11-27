@@ -11,34 +11,32 @@ func main() {
 	// INPUT SECTION
 	// Hardcoded transaksi
 	transactions := []model.Transaksi{
-		// {ID: 1, Type: "SELL", Qty: 30000, Price: 9550},
-		// {ID: 4, Type: "BUY", Qty: 50000, Price: 9275},
-		// {ID: 2, Type: "SELL", Qty: 20000, Price: 9425},
-		// {ID: 3, Type: "SELL", Qty: 20000, Price: 9475},
-		{ID: 1, Type: "SELL", Qty: 50000, Price: 2570},
-		{ID: 2, Type: "SELL", Qty: 20000, Price: 2570},
-		{ID: 3, Type: "SELL", Qty: 30000, Price: 2570},
-		{ID: 4, Type: "SELL", Qty: 30000, Price: 2570},
-		{ID: 6, Type: "SELL", Qty: 30000, Price: 2570},
-		{ID: 7, Type: "SELL", Qty: 20000, Price: 2570},
-		{ID: 5, Type: "SELL", Qty: 50000, Price: 2560},
-		{ID: 8, Type: "SELL", Qty: 100000, Price: 2560},
-		{ID: 9, Type: "BUY", Qty: 50000, Price: 2500},
-		{ID: 10, Type: "BUY", Qty: 50000, Price: 2500},
+		{ID: 1, Type: "BUY", Qty: 30000, Price: 7650},
+		{ID: 2, Type: "SELL", Qty: 30000, Price: 7950},
 	}
+	/*
+		[
+			{608 2 80000 1330}
+			{620 1 50000 1340}
+			{621 2 80000 1340}
+			{622 2 80000 1340}
+			{624 2 100000 1338.915}
+			{627 2 100000 1335}
+			{628 2 50000 1335}
+			{629 2 80000 1330}
+			{630 2 100000 1330}
+		]
+	*/
+	//
 	var startQty float64
 	var startAvg float64
 	var targetAvg float64
 	var targetQty float64
 
-	startQty = 1248800
-	targetQty = 1018800
-	startAvg = 2533.535745
-	targetAvg = 2530.932676
-	// startQty = 485000
-	// targetQty = 465000
-	// startAvg = 10070.0659
-	// targetAvg = 9991.3465
+	startQty = 275000
+	targetQty = 275000
+	startAvg = 8913.093104
+	targetAvg = 8788.854438
 
 	// Find solution with detailed logging
 	solution, found := logic.BacktrackOrderSequence(transactions, startQty, startAvg, targetQty, targetAvg)
@@ -57,15 +55,15 @@ func main() {
 
 		for i, order := range solution {
 			qty, avg, _ = logic.Calculate(qty, avg, order)
-			fmt.Printf("  Step %d: %s %d @ %.2f → Qty=%.1f, Avg=%.4f\n",
+			fmt.Printf("  Step %d: %s %d @ %.2f → Qty=%.1f, Avg=%.6f\n",
 				i+1, order.Type, order.Qty, order.Price, qty, avg)
 		}
 
-		fmt.Printf("\n✅ Final result: Avg=%.4f (target was %.4f)\n", avg, targetAvg)
+		fmt.Printf("\n✅ Final result: Avg=%.4f (target was %.6f)\n", avg, targetAvg)
 
 	} else {
 		fmt.Println("❌ NO SOLUTION FOUND")
-		fmt.Printf("Target average %.4f cannot be achieved with the given orders\n", targetAvg)
+		fmt.Printf("Target average %.6f cannot be achieved with the given orders\n", targetAvg)
 	}
 	// START PROCESS
 

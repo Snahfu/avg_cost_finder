@@ -3,6 +3,7 @@ package logic
 import (
 	"avg_cost_finder/model"
 	"avg_cost_finder/utils"
+	"fmt"
 	"math"
 )
 
@@ -65,8 +66,8 @@ func BacktrackOrderSequence(orders []model.Transaksi, startQty, startAvg, target
 		// Base case: all orders have been used
 		if depth == n {
 			// Check if we've reached both target quantity and average
-			qtyMatch := math.Abs(currentQty-targetQty) < 0.0001
-			avgMatch := math.Abs(currentAvg-targetAvg) < 0.0001
+			qtyMatch := math.Abs(currentQty-targetQty) < 0.000001
+			avgMatch := math.Abs(currentAvg-targetAvg) < 0.000001
 			return qtyMatch && avgMatch
 		}
 
@@ -78,6 +79,8 @@ func BacktrackOrderSequence(orders []model.Transaksi, startQty, startAvg, target
 
 			// Try this order
 			newQty, newAvg, valid := Calculate(currentQty, currentAvg, orders[i])
+			// fmt.Printf("%f", newAvg)
+			// fmt.Printf("%f", newQty)
 			if !valid {
 				continue // Skip invalid moves
 			}
@@ -93,7 +96,7 @@ func BacktrackOrderSequence(orders []model.Transaksi, startQty, startAvg, target
 			// === Pruning Section ===
 			if remainingInfo.BuyCount == 0 && remainingInfo.SellCount > 0 && newQty > 0 {
 				// SELL tidak akan mengubah avg, jadi hanya lanjut jika avg sudah sama target
-				if math.Abs(newAvg-targetAvg) > 0.0001 {
+				if math.Abs(newAvg-targetAvg) > 0.000001 {
 					continue // prune
 				}
 				// Kalau avg sudah sama target, biarkan lanjut
@@ -102,14 +105,14 @@ func BacktrackOrderSequence(orders []model.Transaksi, startQty, startAvg, target
 			// Make the choice (assuming not prunned)
 			used[i] = true
 			solution = append(solution, orders[i])
-			// fmt.Printf("%s📝 Added to solution: [", "")
-			// for j, ord := range solution {
-			// 	if j > 0 {
-			// 		fmt.Print(", ")
-			// 	}
-			// 	fmt.Printf("%d", ord.ID)
-			// }
-			// fmt.Printf("]\n")
+			fmt.Printf("%s📝 Added to solution: [", "")
+			for j, ord := range solution {
+				if j > 0 {
+					fmt.Print(", ")
+				}
+				fmt.Printf("%d", ord.ID)
+			}
+			fmt.Printf("]\n")
 
 			// Recursively try to complete the solution
 			if backtrack(newQty, newAvg, depth+1) {
